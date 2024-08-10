@@ -10,28 +10,31 @@ function Recipess() {
 
   const [foods, setFoods] = useState([]);
 
-  useEffect(function () {
-    async function fetchFoods() {
-      try {
-        const res = await fetch(`${API_URL}${query}`);
-        if (!res.ok) throw new Error("Went Wrong");
+  useEffect(
+    function () {
+      async function fetchFoods() {
+        try {
+          const res = await fetch(`${API_URL}${query}`);
+          if (!res.ok) throw new Error("Went Wrong");
 
-        const data = await res.json();
-        setFoods(data.meals);
-      } catch (error) {
-        console.log(error.message);
+          const data = await res.json();
+          setFoods(data.meals);
+        } catch (error) {
+          console.log(error.message);
+        }
       }
-    }
 
-    fetchFoods();
-  }, []);
+      fetchFoods();
+    },
+    [query]
+  );
 
   return (
     <div>
       <Navbar />
       <div className="w-full px-5 mt-14 h-fit">
         <div className="w-full max-w-[1300px] mx-auto ">
-          {foods.map((food) => (
+          {foods?.map((food) => (
             <Card key={food.idMeal} randomFood={food} />
           ))}
         </div>
