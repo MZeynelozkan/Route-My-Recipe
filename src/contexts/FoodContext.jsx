@@ -10,6 +10,7 @@ const BASE_URL = "https://www.themealdb.com/api/json/v1/1/lookup.php?i=";
 const initialState = {
   foods: [],
   meal: {},
+  oldFoods: [],
 };
 
 function reducer(state, action) {
@@ -23,6 +24,18 @@ function reducer(state, action) {
       return {
         ...state,
         meal: action.payload,
+        oldFoods: state.oldFoods
+          .map((food) => food.idMeal)
+          .includes(action.payload.idMeal)
+          ? state.oldFoods
+          : [...state.oldFoods, action.payload],
+      };
+
+    case "clear/meal":
+      return {
+        ...state,
+        foods: [],
+        meal: {},
       };
     default:
       throw new Error("Unknown action type");
@@ -30,9 +43,13 @@ function reducer(state, action) {
 }
 
 function FoodProvider({ children }) {
-  const [{ foods, meal }, dispatch] = useReducer(reducer, initialState);
+  const [{ foods, meal, oldFoods }, dispatch] = useReducer(
+    reducer,
+    initialState
+  );
 
   async function fetchFoods(query) {
+    dispatch({ type: "clear/meal" });
     try {
       const url = query ? `${API_URL_QUERY}${query}` : API_URL_RANDOM;
       const res = await fetch(url);
@@ -51,8 +68,13 @@ function FoodProvider({ children }) {
     }
   }
 
+  function handleClear() {
+    dispatch({ type: "clear/meal" });
+  }
+
   async function fetchSingle(id) {
     if (!id) return; // Eğer id yoksa işlemi sonlandır
+    dispatch({ type: "clear/meal" });
     try {
       const res = await fetch(`${BASE_URL}${id}`);
       if (!res.ok) throw new Error("Fetch failed");
@@ -66,7 +88,9 @@ function FoodProvider({ children }) {
   }
 
   return (
-    <FoodContext.Provider value={{ foods, meal, fetchFoods, fetchSingle }}>
+    <FoodContext.Provider
+      value={{ foods, meal, fetchFoods, fetchSingle, handleClear, oldFoods }}
+    >
       {children}
     </FoodContext.Provider>
   );
