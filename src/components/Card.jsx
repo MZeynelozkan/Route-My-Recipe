@@ -5,16 +5,21 @@ function Card({ randomFood }) {
     randomFood;
 
   return (
-    <div className="relative w-full max-w-[450px] mx-auto ">
+    <div className="relative w-full max-w-[450px] mx-auto">
       <Link to={`${idMeal}`}>
-        <div className="block rounded-lg bg-white text-white shadow-secondary-1 dark:bg-surface-dark ">
-          <img className="rounded-lg max-h-[450px]" src={strMealThumb} alt="" />
+        {/* URL'yi kontrol edin */}
+        <div className="block rounded-lg bg-white text-white shadow-secondary-1 dark:bg-surface-dark">
+          <img
+            className="rounded-lg max-h-[450px]"
+            src={strMealThumb}
+            alt={strMeal}
+          />
           <div className="absolute top-0 p-6">
-            <h5 className="mb-2 text-2xl  leading-tight font-extrabold ">
+            <h5 className="mb-2 text-2xl leading-tight font-extrabold">
               {strMeal}
             </h5>
-            <p className="mb-4 text-base ">{strCategory}</p>
-            <p className=" text-xl">
+            <p className="mb-4 text-base">{strCategory}</p>
+            <p className="text-xl">
               <small>{strArea}</small>
               <br />
               <small>{strTags}</small>

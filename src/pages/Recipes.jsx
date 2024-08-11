@@ -1,33 +1,36 @@
-import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Card from "../components/Card";
-
-const API_URL = "https://www.themealdb.com/api/json/v1/1/random.php";
+import { useFood } from "../contexts/FoodContext";
+import { useEffect } from "react";
+import { useParams } from "react-router-dom";
 
 function Recipes() {
-  const [foods, setFoods] = useState([]);
+  const { foods, fetchFoods } = useFood();
+  const { query } = useParams();
 
-  useEffect(function () {
-    async function fetchFoods() {
-      try {
-        const res = await fetch(API_URL);
-        if (!res.ok) throw new Error("Went Wrong");
+  useEffect(
+    function () {
+      fetchFoods(query);
+    },
+    [query]
+  );
 
-        const data = await res.json();
-        setFoods(data.meals);
-      } catch (error) {
-        console.log(error.message);
-      }
-    }
-
-    fetchFoods();
-  }, []);
+  if (!foods || foods.length === 0) {
+    // foods array mi ve boş mu kontrol edin
+    return <div>Loading</div>;
+  }
 
   return (
     <div>
       <Navbar />
       <div className="w-full px-5 mt-14 h-fit">
-        <div className="w-full max-w-[1300px] mx-auto ">
+        <div
+          className={`w-full max-w-[1300px] mx-auto ${
+            foods.length >= 3
+              ? "grid grid-cols-1 gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+              : "flex flex-col gap-4"
+          }`}
+        >
           {foods.map((food) => (
             <Card key={food.idMeal} randomFood={food} />
           ))}

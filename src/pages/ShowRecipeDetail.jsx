@@ -1,29 +1,21 @@
-import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
-
-const BASE_URL = "https://www.themealdb.com/api/json/v1/1/lookup.php?i=";
+import { useFood } from "../contexts/FoodContext";
+import { useEffect } from "react";
 
 function ShowRecipeDetail() {
+  const { meal, fetchSingle } = useFood();
   const { id } = useParams();
-  const [meal, setMeal] = useState(null);
 
-  useEffect(() => {
-    async function fetchSingle() {
-      try {
-        const res = await fetch(`${BASE_URL}${id}`);
-        if (!res.ok) throw new Error("Went wrong");
-        const data = await res.json();
-        setMeal(data.meals[0]);
-      } catch (error) {
-        console.log(error.message);
-      }
-    }
-    fetchSingle();
-  }, [id]);
+  useEffect(
+    function () {
+      fetchSingle(id);
+    },
+    [id]
+  );
 
-  if (!meal) {
-    return <div>Loading</div>;
+  if (!meal || !meal.strMeal) {
+    return <div>Loading...</div>;
   }
 
   const {
@@ -39,7 +31,7 @@ function ShowRecipeDetail() {
     <div>
       <Navbar />
       <div className="w-full px-5 mt-14">
-        <div className="block max-w-[18rem] md:max-w-[24rem] lg:max-w-[36rem] xl:max-w-[48rem] mx-auto rounded-lg bg-white text-surface shadow-secondary-1 dark:bg-surface-dark dark:text-white">
+        <div className="border-solid border-2 shadow-md block max-w-[18rem] md:max-w-[24rem] lg:max-w-[36rem] xl:max-w-[48rem] mx-auto rounded-lg bg-white text-surface shadow-secondary-1 dark:bg-surface-dark dark:text-white">
           <div className="relative overflow-hidden bg-cover bg-no-repeat">
             <img
               className="w-full h-[200px] object-cover rounded-t-lg"

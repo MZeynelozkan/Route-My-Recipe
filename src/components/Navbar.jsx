@@ -3,7 +3,6 @@ import { NavLink, useNavigate } from "react-router-dom";
 
 function Navbar() {
   const [inputValue, setInputValue] = useState("");
-
   const navigate = useNavigate();
 
   function handleKeyDown(e) {
@@ -19,7 +18,7 @@ function Navbar() {
     <nav className="relative flex w-full flex-wrap items-center justify-between bg-zinc-50 py-2 shadow-dark-mild dark:bg-neutral-700 lg:py-4">
       <div className="flex w-full flex-wrap items-center justify-evenly px-3">
         <NavLink to="/">
-          <span className=" ms-2 text-2xl font-extrabold text-black dark:text-white">
+          <span className="ms-2 text-2xl font-extrabold text-black dark:text-white">
             myRecipe
           </span>
         </NavLink>
