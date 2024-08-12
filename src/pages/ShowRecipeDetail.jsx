@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { useFood } from "../contexts/FoodContext";
-import { useEffect } from "react";
+import { memo, useEffect } from "react";
 
 function ShowRecipeDetail() {
   const { meal, fetchSingle } = useFood();
@@ -9,9 +9,11 @@ function ShowRecipeDetail() {
 
   useEffect(
     function () {
+      if (id === meal.idMeal) return;
+
       fetchSingle(id);
     },
-    [id]
+    [id, fetchSingle, meal.idMeal]
   );
 
   if (!meal || !meal.strMeal) {
@@ -54,4 +56,4 @@ function ShowRecipeDetail() {
   );
 }
 
-export default ShowRecipeDetail;
+export default memo(ShowRecipeDetail);

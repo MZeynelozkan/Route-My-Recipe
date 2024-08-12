@@ -1,4 +1,11 @@
-import { createContext, useContext, useEffect, useReducer } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useReducer,
+} from "react";
 import { useParams } from "react-router-dom";
 
 const FoodContext = createContext();
@@ -48,7 +55,7 @@ function FoodProvider({ children }) {
     initialState
   );
 
-  async function fetchFoods(query) {
+  const fetchFoods = useCallback(async function fetchFoods(query) {
     dispatch({ type: "clear/meal" });
     try {
       const url = query ? `${API_URL_QUERY}${query}` : API_URL_RANDOM;
@@ -66,34 +73,38 @@ function FoodProvider({ children }) {
     } catch (error) {
       console.log(error.message);
     }
-  }
+  }, []);
 
-  function handleClear() {
-    dispatch({ type: "clear/meal" });
-  }
+  const fetchSingle = useCallback(
+    async function fetchSingle(id) {
+      if (!id) return;
 
-  async function fetchSingle(id) {
-    if (!id) return; // Eğer id yoksa işlemi sonlandır
-    dispatch({ type: "clear/meal" });
-    try {
-      const res = await fetch(`${BASE_URL}${id}`);
-      if (!res.ok) throw new Error("Fetch failed");
+      dispatch({ type: "clear/meal" });
+      try {
+        const res = await fetch(`${BASE_URL}${id}`);
+        if (!res.ok) throw new Error("Fetch failed");
 
-      const data = await res.json();
-      console.log(data);
-      dispatch({ type: "fetch/meal", payload: data.meals[0] || {} });
-    } catch (error) {
-      console.log(error.message);
-    }
-  }
-
-  return (
-    <FoodContext.Provider
-      value={{ foods, meal, fetchFoods, fetchSingle, handleClear, oldFoods }}
-    >
-      {children}
-    </FoodContext.Provider>
+        const data = await res.json();
+        dispatch({ type: "fetch/meal", payload: data.meals[0] || {} });
+      } catch (error) {
+        console.log(error.message);
+      }
+    },
+    [dispatch]
   );
+
+  const value = useMemo(
+    () => ({
+      foods,
+      meal,
+      fetchFoods,
+      fetchSingle,
+      oldFoods,
+    }),
+    [foods, meal, fetchFoods, fetchSingle, oldFoods]
+  );
+
+  return <FoodContext.Provider value={value}>{children}</FoodContext.Provider>;
 }
 
 function useFood() {
