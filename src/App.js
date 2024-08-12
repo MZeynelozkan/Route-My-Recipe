@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { lazy, Suspense } from "react";
-import { FoodProvider } from "./contexts/FoodContext";
+import { FoodsProvider } from "./contexts/FoodsContext";
+import { MealProvider } from "./contexts/MealContext";
 // import Main from "./pages/Main";
 // import AboutUs from "./pages/AboutUs";
 // import Recipes from "./pages/Recipes";
@@ -16,25 +17,27 @@ const ShowRecipeDetail = lazy(() => import("./pages/ShowRecipeDetail"));
 function App() {
   return (
     <div>
-      <FoodProvider>
-        <BrowserRouter>
-          <Suspense fallback={<h1>Loading...</h1>}>
-            <Routes>
-              <Route index element={<Main />} />
-              <Route path="aboutus" element={<AboutUs />} />
-              <Route path="recipes" element={<Recipes />} />
-              <Route path="recipes/:id" element={<ShowRecipeDetail />} />
-              <Route path="recipes/query/:query" element={<Recipes />} />
-              <Route
-                path="recipes/query/:query/:id"
-                element={<ShowRecipeDetail />}
-              />
-              <Route path="old" element={<OldFoods />} />
-              <Route path="old/:id" element={<ShowRecipeDetail />} />
-            </Routes>
-          </Suspense>
-        </BrowserRouter>
-      </FoodProvider>
+      <FoodsProvider>
+        <MealProvider>
+          <BrowserRouter>
+            <Suspense fallback={<h1>Loading...</h1>}>
+              <Routes>
+                <Route index element={<Main />} />
+                <Route path="aboutus" element={<AboutUs />} />
+                <Route path="recipes" element={<Recipes />} />
+                <Route path="recipes/:id" element={<ShowRecipeDetail />} />
+                <Route path="recipes/query/:query" element={<Recipes />} />
+                <Route
+                  path="recipes/query/:query/:id"
+                  element={<ShowRecipeDetail />}
+                />
+                <Route path="old" element={<OldFoods />} />
+                <Route path="old/:id" element={<ShowRecipeDetail />} />
+              </Routes>
+            </Suspense>
+          </BrowserRouter>
+        </MealProvider>
+      </FoodsProvider>
     </div>
   );
 }

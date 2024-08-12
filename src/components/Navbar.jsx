@@ -1,18 +1,23 @@
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { useFood } from "../contexts/FoodContext";
+import { useMeal } from "../contexts/MealContext";
 
 function Navbar() {
   const [inputValue, setInputValue] = useState("");
   const navigate = useNavigate();
 
-  const { handleClear, oldFoods } = useFood();
+  const { oldMeals } = useMeal();
 
   function handleSubmit(e) {
     e.preventDefault();
     if (inputValue.trim() !== "") {
       navigate(`/recipes/query/${inputValue.trim()}`);
+      setInputValue(""); // Aramadan sonra input'u temizler
     }
+  }
+
+  function handleClear() {
+    setInputValue("");
   }
 
   return (
@@ -32,7 +37,7 @@ function Navbar() {
           </NavLink>
           <NavLink
             className="font-bold hover:text-blue-600"
-            to={`${oldFoods.length > 0 ? "/old" : "/recipes"}`}
+            to={`${oldMeals?.length > 0 ? "/old" : "/recipes"}`}
           >
             Old Recipes
           </NavLink>
@@ -50,8 +55,30 @@ function Navbar() {
               placeholder="Search"
               aria-label="Search"
               aria-describedby="button-addon2"
+              value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
             />
+
+            {inputValue && (
+              <button
+                type="button"
+                onClick={handleClear}
+                className="absolute right-12 top-2 text-gray-500 dark:text-white"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  className="w-5 h-5"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm-2.293-9.707a1 1 0 011.414 0L10 9.586l1.879-1.88a1 1 0 111.414 1.415L11.414 11l1.88 1.879a1 1 0 01-1.415 1.414L10 12.414l-1.879 1.88a1 1 0 01-1.414-1.415L8.586 11l-1.88-1.879a1 1 0 010-1.414z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </button>
+            )}
 
             <button
               type="submit"

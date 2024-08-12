@@ -1,10 +1,10 @@
 import { useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
-import { useFood } from "../contexts/FoodContext";
+import { useMeal } from "../contexts/MealContext";
 import { memo, useEffect } from "react";
 
 function ShowRecipeDetail() {
-  const { meal, fetchSingle } = useFood();
+  const { meal, fetchSingle } = useMeal();
   const { id } = useParams();
 
   useEffect(
@@ -17,7 +17,14 @@ function ShowRecipeDetail() {
   );
 
   if (!meal || !meal.strMeal) {
-    return <div>Loading...</div>;
+    return (
+      <div>
+        <Navbar />
+        <div className="w-full text-center mt-14">
+          <p>Loading...</p>
+        </div>
+      </div>
+    );
   }
 
   const {

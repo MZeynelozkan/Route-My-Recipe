@@ -1,6 +1,6 @@
 import Navbar from "../components/Navbar";
 import Card from "../components/Card";
-import { useFood } from "../contexts/FoodContext";
+import { useFood } from "../contexts/FoodsContext";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 
@@ -12,12 +12,11 @@ function Recipes() {
     function () {
       fetchFoods(query);
     },
-    [query]
+    [query, fetchFoods]
   );
 
   if (!foods || foods.length === 0) {
-    // foods array mi ve boş mu kontrol edin
-    return <div>Loading</div>;
+    return <div>Loading...</div>;
   }
 
   return (

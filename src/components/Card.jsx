@@ -6,8 +6,7 @@ function Card({ randomFood }) {
 
   return (
     <div className="relative w-full max-w-[450px] mx-auto">
-      <Link to={`${idMeal}`}>
-        {/* URL'yi kontrol edin */}
+      <Link to={`/recipes/${idMeal}`}>
         <div className="block rounded-lg bg-white text-white shadow-secondary-1 dark:bg-surface-dark">
           <img
             className="rounded-lg max-h-[450px]"
