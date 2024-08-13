@@ -1,22 +1,40 @@
-import Navbar from "../components/Navbar";
-import Card from "../components/Card";
-import { useFood } from "../contexts/FoodsContext";
-import { useEffect } from "react";
+import { useRef, useEffect, memo } from "react";
 import { useParams } from "react-router-dom";
+import { useFood } from "../contexts/FoodsContext";
+import Navbar from "../components/Navbar";
+import Spinner from "../components/Spinner";
+import Card from "../components/Card";
 
 function Recipes() {
-  const { foods, fetchFoods } = useFood();
+  const { foods, loading, fetchFoods, dispatch } = useFood();
   const { query } = useParams();
+  const prevQueryRef = useRef("");
 
-  useEffect(
-    function () {
-      fetchFoods(query);
-    },
-    [query, fetchFoods]
-  );
+  useEffect(() => {
+    dispatch({ type: "clear/foods" });
+
+    if (query !== prevQueryRef.current) {
+      fetchFoods(query || "");
+      prevQueryRef.current = query;
+    }
+  }, [query, fetchFoods]);
+
+  if (loading) {
+    return (
+      <div className="h-dvh">
+        <Navbar />
+        <Spinner />
+      </div>
+    );
+  }
 
   if (!foods || foods.length === 0) {
-    return <div>Loading...</div>;
+    return (
+      <div className="h-dvh">
+        <Navbar />
+        <div>No results found</div>
+      </div>
+    );
   }
 
   return (
@@ -39,4 +57,4 @@ function Recipes() {
   );
 }
 
-export default Recipes;
+export default memo(Recipes);

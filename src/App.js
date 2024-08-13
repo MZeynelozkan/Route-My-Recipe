@@ -2,6 +2,8 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import { FoodsProvider } from "./contexts/FoodsContext";
 import { MealProvider } from "./contexts/MealContext";
+import Spinner from "./components/Spinner";
+import Navbar from "./components/Navbar";
 // import Main from "./pages/Main";
 // import AboutUs from "./pages/AboutUs";
 // import Recipes from "./pages/Recipes";
@@ -20,7 +22,14 @@ function App() {
       <FoodsProvider>
         <MealProvider>
           <BrowserRouter>
-            <Suspense fallback={<h1>Loading...</h1>}>
+            <Suspense
+              fallback={
+                <div className="h-dvh">
+                  <Navbar />
+                  <Spinner />
+                </div>
+              }
+            >
               <Routes>
                 <Route index element={<Main />} />
                 <Route path="aboutus" element={<AboutUs />} />

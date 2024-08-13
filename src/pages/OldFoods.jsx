@@ -1,12 +1,18 @@
 import Card from "../components/Card";
 import Navbar from "../components/Navbar";
+import Spinner from "../components/Spinner";
 import { useMeal } from "../contexts/MealContext";
 
 function OldFoods() {
   const { oldMeals } = useMeal();
 
   if (oldMeals.length === 0) {
-    return <div>No previously viewed meals.</div>;
+    return (
+      <div className="h-dvh">
+        <Navbar />
+        <Spinner />
+      </div>
+    );
   }
 
   return (

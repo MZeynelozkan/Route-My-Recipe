@@ -13,6 +13,7 @@ const API_URL_RANDOM = "https://www.themealdb.com/api/json/v1/1/random.php";
 
 const initialState = {
   foods: [],
+  loading: false, // loading durumunu ekledik
 };
 
 function foodsReducer(state, action) {
@@ -21,11 +22,17 @@ function foodsReducer(state, action) {
       return {
         ...state,
         foods: action.payload,
+        loading: false, // veri yüklendiğinde loading'i false yap
       };
     case "clear/foods":
       return {
         ...state,
         foods: [],
+      };
+    case "set/loading": // loading durumunu güncelle
+      return {
+        ...state,
+        loading: action.payload,
       };
     default:
       throw new Error("Unknown action type");
@@ -33,33 +40,36 @@ function foodsReducer(state, action) {
 }
 
 function FoodsProvider({ children }) {
-  const [{ foods }, dispatch] = useReducer(foodsReducer, initialState);
+  const [{ foods, loading }, dispatch] = useReducer(foodsReducer, initialState);
 
   const fetchFoods = useCallback(async function fetchFoods(query) {
     dispatch({ type: "clear/foods" });
+    dispatch({ type: "set/loading", payload: true }); // loading'i true yap
+
     try {
       const url = query ? `${API_URL_QUERY}${query}` : API_URL_RANDOM;
       const res = await fetch(url);
       if (!res.ok) throw new Error("Fetch failed");
 
-      const contentType = res.headers.get("content-type");
-      if (contentType && contentType.includes("application/json")) {
-        const data = await res.json();
-        dispatch({ type: "fetch/foods", payload: data.meals || [] });
-      } else {
-        throw new Error("Received non-JSON response");
-      }
+      const data = await res.json();
+      await new Promise((resolve) => setTimeout(resolve, 600));
+      dispatch({ type: "fetch/foods", payload: data.meals || [] });
     } catch (error) {
       console.log(error.message);
+      dispatch({ type: "set/loading", payload: false });
+    } finally {
+      dispatch({ type: "set/loading", payload: false });
     }
   }, []);
 
   const value = useMemo(
     () => ({
       foods,
+      loading,
       fetchFoods,
+      dispatch,
     }),
-    [foods, fetchFoods]
+    [foods, loading, fetchFoods]
   );
 
   return (

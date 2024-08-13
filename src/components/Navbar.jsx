@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { memo, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useMeal } from "../contexts/MealContext";
 
@@ -104,4 +104,4 @@ function Navbar() {
   );
 }
 
-export default Navbar;
+export default memo(Navbar);

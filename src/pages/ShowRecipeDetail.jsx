@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { useMeal } from "../contexts/MealContext";
 import { memo, useEffect } from "react";
+import Spinner from "../components/Spinner";
 
 function ShowRecipeDetail() {
   const { meal, fetchSingle } = useMeal();
@@ -18,11 +19,9 @@ function ShowRecipeDetail() {
 
   if (!meal || !meal.strMeal) {
     return (
-      <div>
+      <div className="h-dvh">
         <Navbar />
-        <div className="w-full text-center mt-14">
-          <p>Loading...</p>
-        </div>
+        <Spinner />
       </div>
     );
   }
