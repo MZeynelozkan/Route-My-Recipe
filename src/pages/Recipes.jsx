@@ -17,7 +17,7 @@ function Recipes() {
       fetchFoods(query || "");
       prevQueryRef.current = query;
     }
-  }, [query, fetchFoods]);
+  }, [query, fetchFoods, dispatch]);
 
   if (loading) {
     return (
